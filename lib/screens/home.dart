@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:outshade/constants/colors.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:outshade/data/userdata.dart';
 import 'package:outshade/screens/profile.dart';
 import 'package:outshade/widgets/listtiles.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class Home extends StatefulWidget {
   const Home({Key? key}) : super(key: key);
@@ -13,6 +13,8 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
+  int fieldAge = 0;
+  String fieldGen = 'O';
   @override
   Widget build(BuildContext context) {
     double w = MediaQuery.of(context).size.width;
@@ -20,10 +22,13 @@ class _HomeState extends State<Home> {
       backgroundColor: AppColors().primary,
       body: SafeArea(
           child: Padding(
-              padding: EdgeInsets.symmetric(horizontal: 20),
+              padding: const EdgeInsets.symmetric(horizontal: 20),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
+                  const SizedBox(
+                    height: 15,
+                  ),
                   Text(
                     "OUTSHADE",
                     style: TextStyle(
@@ -31,10 +36,10 @@ class _HomeState extends State<Home> {
                         color: AppColors().accent,
                         fontWeight: FontWeight.bold),
                   ),
-                  SizedBox(
+                  const SizedBox(
                     height: 15,
                   ),
-                  Text(
+                  const Text(
                     "Users",
                     style: TextStyle(
                       fontSize: 25,
@@ -42,15 +47,17 @@ class _HomeState extends State<Home> {
                       // fontWeight: FontWeight.bold
                     ),
                   ),
-                  SizedBox(
+                  const SizedBox(
                     height: 10,
                   ),
                   Expanded(
-                      child: Container(
+                    // child: Container(
                     child: ListView.builder(
                         itemCount: userData['users']!.length,
                         itemBuilder: (BuildContext context, int index) {
                           return InkWell(
+                              highlightColor: Colors.transparent,
+                              splashColor: Colors.transparent,
                               onTap: () {
                                 //   Navigator.push(
                                 //       context,
@@ -65,46 +72,135 @@ class _HomeState extends State<Home> {
                                             width: w - 40,
                                             height: w - 40,
                                             color: AppColors().primary,
-                                            child: Column(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.spaceAround,
-                                              children: <Widget>[
-                                                Text("Login as Krishna"),
-                                                Text("Age"),
-                                                Text("Gender"),
-                                                InkWell(
-                                                    onTap: () {
-                                                      Navigator.push(
-                                                          context,
-                                                          MaterialPageRoute(
-                                                              builder:
-                                                                  ((context) =>
-                                                                      Profile())));
-                                                    },
-                                                    child: Container(
-                                                      height: 35,
-                                                      width: 120,
-                                                      child: Center(
-                                                          child: Text(
-                                                        "Sign In",
-                                                        style: TextStyle(
-                                                            color: Colors.black,
-                                                            fontSize: 20),
-                                                      )),
-                                                      decoration: BoxDecoration(
-                                                          borderRadius:
-                                                              BorderRadius
-                                                                  .circular(30),
-                                                          color: AppColors()
-                                                              .accent),
-                                                    ))
-                                              ],
-                                            ))));
+                                            child: Padding(
+                                                padding:
+                                                    const EdgeInsets.all(20),
+                                                child: Column(
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.start,
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment
+                                                          .spaceAround,
+                                                  children: <Widget>[
+                                                    Text(
+                                                      "Login as ${userData['users']![index]['name']}",
+                                                      style: const TextStyle(
+                                                          fontSize: 18),
+                                                    ),
+                                                    const SizedBox(
+                                                      height: 40,
+                                                    ),
+                                                    const Text("Age"),
+                                                    TextFormField(
+                                                        // inputFormatters: [int],
+                                                        keyboardType:
+                                                            TextInputType
+                                                                .number,
+                                                        onChanged: ((value) {
+                                                          setState(() {
+                                                            fieldAge =
+                                                                int.parse(
+                                                                    value);
+                                                          });
+                                                        })),
+                                                    const SizedBox(
+                                                      height: 50,
+                                                    ),
+                                                    const Text("Gender (M/F/O"),
+                                                    TextFormField(
+                                                        onChanged: ((value) {
+                                                      setState(() {
+                                                        fieldGen = value;
+                                                      });
+                                                    })),
+                                                    const SizedBox(
+                                                      height: 30,
+                                                    ),
+                                                    InkWell(
+                                                        onTap: () async {
+                                                          SharedPreferences
+                                                              preferences =
+                                                              await SharedPreferences
+                                                                  .getInstance();
+                                                          preferences.setBool(
+                                                              'isLogged', true);
+                                                          preferences.setInt(
+                                                              'age',
+                                                              int.parse(fieldAge
+                                                                  .toString()));
+                                                          preferences.setString(
+                                                              'name',
+                                                              userData['users']![
+                                                                          index]
+                                                                      [
+                                                                      'name'] ??
+                                                                  '');
+                                                          preferences.setString(
+                                                              'gender',
+                                                              fieldGen
+                                                                  .toString());
+
+                                                          preferences.setString(
+                                                              'type',
+                                                              userData['users']![
+                                                                          index]
+                                                                      [
+                                                                      'atype'] ??
+                                                                  '');
+
+                                                          setState(() {
+                                                            userAge = int.parse(
+                                                                fieldAge
+                                                                    .toString());
+                                                            userName = userData[
+                                                                            'users']![
+                                                                        index]
+                                                                    ['name'] ??
+                                                                '';
+                                                            userType = userData[
+                                                                            'users']![
+                                                                        index]
+                                                                    ['atype'] ??
+                                                                '';
+                                                            userGender =
+                                                                fieldGen
+                                                                    .toString();
+                                                          });
+                                                          Navigator.pushAndRemoveUntil(
+                                                              context,
+                                                              MaterialPageRoute(
+                                                                  builder:
+                                                                      ((context) =>
+                                                                          const Profile())),
+                                                              (route) => false);
+                                                        },
+                                                        child: Container(
+                                                          height: 35,
+                                                          width: 120,
+                                                          child: const Center(
+                                                              child: Text(
+                                                            "Sign In",
+                                                            style: TextStyle(
+                                                                color: Colors
+                                                                    .black,
+                                                                fontSize: 20),
+                                                          )),
+                                                          decoration: BoxDecoration(
+                                                              borderRadius:
+                                                                  BorderRadius
+                                                                      .circular(
+                                                                          30),
+                                                              color: AppColors()
+                                                                  .accent),
+                                                        ))
+                                                  ],
+                                                )))));
                               },
-                              child: UserTile(userData['users']![index]['name'],
+                              child: userTile(userData['users']![index]['name'],
                                   userData['users']![index]['atype']));
                         }),
-                  ))
+                    // )
+                  )
                 ],
               ))),
     );

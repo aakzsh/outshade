@@ -16,3 +16,7 @@ const userData = {
     {"name": "Sabina", "id": "14", "atype": "Temporary"}
   ]
 };
+
+int userAge = -1;
+String userName = "", userType = "", userGender = "";
+bool userIsLogged = false;

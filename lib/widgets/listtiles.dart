@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:outshade/constants/colors.dart';
 
-Widget UserTile(name, type) {
+Widget userTile(name, type) {
   return Padding(
-      padding: EdgeInsets.symmetric(vertical: 10),
+      padding: const EdgeInsets.symmetric(vertical: 10),
       child: Container(
         width: double.maxFinite,
         height: 100,
         decoration: BoxDecoration(
-          color: Color.fromRGBO(19, 19, 19, 1),
+          color: const Color.fromRGBO(19, 19, 19, 1),
           borderRadius: BorderRadius.circular(10),
           border: Border.all(width: 0.7, color: AppColors().accent),
           boxShadow: [
@@ -29,21 +29,21 @@ Widget UserTile(name, type) {
                 children: <Widget>[
                   Text(
                     name,
-                    style: TextStyle(fontSize: 20),
+                    style: const TextStyle(fontSize: 20),
                   ),
-                  SizedBox(
+                  const SizedBox(
                     height: 2,
                   ),
                   Text(
                     type,
-                    style: TextStyle(color: Colors.white70),
+                    style: const TextStyle(color: Colors.white70),
                   )
                 ],
               ),
               Container(
                 height: 35,
                 width: 120,
-                child: Center(
+                child: const Center(
                     child: Text(
                   "Sign In",
                   style: TextStyle(color: Colors.black, fontSize: 20),
